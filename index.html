@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Board</title>
+    <style>
+        /* Importamos una fuente limpia que se ve bien en Notion */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent; /* Ideal para el modo claro/oscuro de Notion */
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- CINTA DE IMÁGENES --- */
+        .slider-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .slider-track {
+            display: inline-block;
+            /* Cambia los '30s' para hacer que vaya más rápido o más lento */
+            animation: scroll 45s linear infinite; 
+        }
+
+        .slider-track img {
+            height: 250px;
+            width: auto;
+            margin: 0 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            object-fit: cover;
+            vertical-align: middle;
+        }
+
+        /* Animación para el bucle infinito */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+            /* Se desplaza hasta el 50% porque duplicaremos las imágenes en el HTML */
+        }
+
+        /* --- SECCIÓN DE FRASES --- */
+        .quote-container {
+            margin-top: 40px;
+            text-align: center;
+            max-width: 80%;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote {
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: #444; /* Usa un gris claro (#eee) si tu Notion está en modo oscuro */
+            font-style: italic;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .quote.fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CINTA DE IMÁGENES -->
+    <div class="slider-container">
+        <div class="slider-track" id="track">
+            <!-- GRUPO 1 DE IMÁGENES (Sustituye los links por los tuyos) -->
+            <img src="https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg" alt="Vision 5">
+            <img src="https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg" alt="Vision 6">
+            <img src="https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg" alt="Vision 7">
+            ,<img src="https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg" alt="Vision 8">
+            <img src="https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg" alt="Vision 9">
+            <img src="https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg" alt="Vision 10">
+            <img src="https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg" alt="Vision 15">
+            <img src="https://i.pinimg.com/1200x/66/d6/94/66d694bf89009897cfea59cab3807e3d.jpg" alt="Vision 16">
+            <img src="https://i.pinimg.com/736x/02/e0/86/02e08602c0873eac50926de147176f72.jpg" alt="Vision 1">
+            <img src="https://i.pinimg.com/736x/ec/85/34/ec85348715cdec6be19fa49542319c7e.jpg" alt="Vision 2">
+            <img src="https://i.pinimg.com/1200x/4c/c5/19/4cc51953538fa53c737acf61466969ed.jpg" alt="Vision 3">
+            <img src="https://i.pinimg.com/736x/c6/aa/b0/c6aab0710727d17b4298a6dab25ac555.jpg" alt="Vision 4">
+            <img src="https://i.pinimg.com/1200x/34/42/05/344205701a26191b6eee948a71178065.jpg" alt="Vision 11">
+            <img src="https://i.pinimg.com/1200x/72/f1/8e/72f18edc3fe7d527aa3947a040adf195.jpg" alt="Vision 13">
+            <img src="https://i.pinimg.com/736x/3e/94/36/3e9436a01e789b1ffa052329044c1c8c.jpg" alt="Vision 14">
+            <img src="https://i.pinimg.com/1200x/dd/98/c9/dd98c924021bd0aa88e3f51524c43c03.jpg" alt="Vision 15">
+            <img src="https://i.pinimg.com/1200x/2d/4e/f7/2d4ef74abb20557da52ffeb7f16b1bbe.jpg" alt="Vision 16">
+            <img src="https://i.pinimg.com/736x/06/37/35/0637356f1bf2a290141c8260c44ff3d9.jpg" alt="Vision 19">
+            <img src="https://i.pinimg.com/1200x/14/6f/b0/146fb0d567b0a2f68bafbedd38d582fd.jpg" alt="vision 20">
+            <img src="https://i.pinimg.com/736x/25/c7/b0/25c7b04d070b8cebf7fe798e8c286e5b.jpg" alt="Vision 17">
+            <img src="https://i.pinimg.com/736x/51/95/3b/51953b07aca3f0808c1996f4eae3df98.jpg" alt="Vision 18">
+
+            <img src="" alt="Vision 20">
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE FRASES -->
+    <div class="quote-container">
+        <div class="quote" id="quote-text">"El futuro pertenece a quienes creen en la belleza de sus sueños."</div>
+    </div>
+
+    <script>
+        // Arreglo con tus frases
+        const quotes = [
+            '"Sé mejor que hace un segundo"',
+            '"El miedo es el precio que pagas por todo aquello que vale la pena vivir"',
+            '"El futuro pertenece a quienes creen en la belleza de sus sueños."',
+            '"La disciplina es el puente entre las metas y los logros."',
+            '"No te detengas hasta que te sientas orgulloso."',
+            '"Confía en el proceso, mantente enfocado."',
+            '"Tu única competencia es la persona que eras ayer."'
+        ];
+
+        let currentQuote = 0;
+        const quoteElement = document.getElementById('quote-text');
+
+        // Función para rotar las frases
+        setInterval(() => {
+            // 1. Inicia el desvanecimiento (fade out)
+            quoteElement.classList.add('fade-out');
+            
+            // 2. Espera a que termine la transición (1 segundo) para cambiar el texto
+            setTimeout(() => {
+                currentQuote = (currentQuote + 1) % quotes.length;
+                quoteElement.innerText = quotes[currentQuote];
+                
+                // 3. Regresa la opacidad (fade in)
+                quoteElement.classList.remove('fade-out');
+            }, 1000); 
+            
+        }, 7000); // Cambia de frase cada 7 segundos
+    </script>
+</body>
+</html>
