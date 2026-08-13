@@ -3,54 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Board - Cinta Vertical</title>
+    <title>Vision Board - Cascada Collage</title>
     <style>
-        /* Importamos una fuente limpia para el autor y el resto del documento */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-
+        /* La fuente Inter solo la dejamos de respaldo, usaremos Times New Roman para todo el texto */
         body {
             margin: 0;
             padding: 0;
             background-color: transparent;
-            display: flex;
-            flex-direction: column;
             height: 100vh;
-            overflow: hidden; /* Evita que aparezca la barra de scroll nativa */
+            overflow: hidden;
+            position: relative;
             box-sizing: border-box;
         }
 
-        /* --- BANNER FIJO (ARRIBA) --- */
-        .quote-banner {
-            position: relative;
-            z-index: 10;
+        /* --- CINTA DEL COLLAGE --- */
+        .slider-container {
             width: 100%;
-            /* Fondo semi-transparente para dar un efecto cristal */
-            background: rgba(255, 255, 255, 0.90);
-            backdrop-filter: blur(8px);
-            padding: 25px 20px;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .slider-track {
+            width: 100%;
+            /* La animación va en negativo a 0 para que el efecto sea de "caída" (bajando) */
+            animation: scroll-down 60s linear infinite;
+        }
+
+        .masonry-grid {
+            /* 2 columnas para espacios estrechos en Notion, se ve muy bien como tira vertical */
+            column-count: 2; 
+            column-gap: 15px;
+            width: 100%;
+            padding-bottom: 15px;
+        }
+
+        /* Si haces el bloque de Notion más ancho, automáticamente pasará a 3 columnas */
+        @media (min-width: 600px) {
+            .masonry-grid { column-count: 3; } 
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 15px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        /* Animación para que las imágenes bajen */
+        @keyframes scroll-down {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+
+        /* --- BANNER DE FRASES (ABAJO Y SUTIL) --- */
+        .bottom-banner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            /* Degradado suave que va de transparente a sólido hacia abajo, sin líneas duras */
+            background: linear-gradient(to top, rgba(255, 255, 255, 1) 15%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0) 100%);
+            padding: 80px 20px 30px; /* Más padding arriba para que el degradado sea larguísimo y difuminado */
             box-sizing: border-box;
             text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 140px;
+            justify-content: flex-end;
         }
 
-        /* Soporte para Modo Oscuro en Notion */
+        /* Soporte para el modo oscuro de Notion manteniendo el degradado sutil */
         @media (prefers-color-scheme: dark) {
-            .quote-banner {
-                background: rgba(25, 25, 25, 0.90);
-                border-bottom: 1px solid rgba(255,255,255,0.05);
+            .bottom-banner {
+                background: linear-gradient(to top, rgba(25, 25, 25, 1) 15%, rgba(25, 25, 25, 0.75) 50%, rgba(25, 25, 25, 0) 100%);
             }
             .quote-text { color: #f5f5f5 !important; }
-            .quote-author { color: #aaa !important; }
+            .quote-author { color: #bbb !important; }
         }
 
         .quote-content {
             transition: opacity 1.2s ease-in-out;
             opacity: 1;
+            max-width: 95%;
         }
 
         .quote-content.fade-out {
@@ -58,98 +100,70 @@
         }
 
         .quote-text {
-            /* Tipografía clásica solicitada */
+            /* Tipografía clásica, sin itálicas */
             font-family: 'Times New Roman', Times, serif;
-            font-size: 1.5rem;
-            font-style: italic;
-            color: #222;
+            font-style: normal; 
+            font-size: 1.35rem;
+            color: #111;
             margin: 0;
-            line-height: 1.3;
+            line-height: 1.4;
         }
 
         .quote-author {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-        }
-
-        /* --- CINTA DE IMÁGENES VERTICAL --- */
-        .slider-container {
-            flex: 1;
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-        }
-
-        .slider-track {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            /* Animación hacia arriba, durará 60 segundos por ciclo */
-            animation: scroll-vertical 60s linear infinite;
-        }
-
-        .slider-track img {
-            width: 100%;
-            height: auto; /* Mantiene la proporción original, nada se corta */
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: block;
-        }
-
-        @keyframes scroll-vertical {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); } 
-            /* Se desplaza el 50% porque duplicamos el contenido abajo */
+            font-family: 'Times New Roman', Times, serif;
+            font-style: normal;
+            font-size: 1rem;
+            color: #555;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- BANNER FIJO CON LAS FRASES -->
-    <div class="quote-banner">
+    <!-- CINTA DE COLLAGE QUE BAJA -->
+    <div class="slider-container">
+        <div class="slider-track" id="track">
+            
+            <!-- GRUPO 1 DEL COLLAGE -->
+            <div class="masonry-grid">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/1200x/66/d6/94/66d694bf89009897cfea59cab3807e3d.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/02/e0/86/02e08602c0873eac50926de147176f72.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/ec/85/34/ec85348715cdec6be19fa49542319c7e.jpg" alt="Vision">
+            </div>
+
+            <!-- GRUPO 2 DEL COLLAGE (DUPLICADO PARA QUE NUNCA SE ACABE EL BUCLE) -->
+            <div class="masonry-grid">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/1200x/66/d6/94/66d694bf89009897cfea59cab3807e3d.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/02/e0/86/02e08602c0873eac50926de147176f72.jpg" alt="Vision">
+                <img class="masonry-item" src="https://i.pinimg.com/736x/ec/85/34/ec85348715cdec6be19fa49542319c7e.jpg" alt="Vision">
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- BANNER SUTIL CON LAS FRASES (ABAJO) -->
+    <div class="bottom-banner">
         <div class="quote-content" id="quote-box">
             <p class="quote-text" id="quote-text">"El futuro pertenece a quienes creen en la belleza de sus sueños."</p>
             <p class="quote-author" id="quote-author">— Eleanor Roosevelt</p>
         </div>
     </div>
 
-    <!-- CINTA QUE SE DESPLAZA -->
-    <div class="slider-container">
-        <div class="slider-track" id="track">
-            
-            <!-- GRUPO 1 DE IMÁGENES -->
-            <img src="https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg" alt="Vision">
-
-            <!-- GRUPO 2 (COPIA EXACTA DEL GRUPO 1 PARA QUE EL BUCLE SEA INFINITO) -->
-            <img src="https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg" alt="Vision">
-            <img src="https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg" alt="Vision">
-            
-        </div>
-    </div>
-
     <script>
-        // Lógica de Frases con Autores
         const quotes = [
             { text: '"El futuro pertenece a quienes creen en la belleza de sus sueños."', author: 'Eleanor Roosevelt' },
             { text: '"Sé mejor que hace un segundo."', author: 'Anónimo' },
@@ -165,7 +179,7 @@
         const quoteText = document.getElementById('quote-text');
         const quoteAuthor = document.getElementById('quote-author');
 
-        // Cambia la frase cada 8 segundos
+        // Rotación suave del texto cada 8 segundos
         setInterval(() => {
             quoteBox.classList.add('fade-out');
             
