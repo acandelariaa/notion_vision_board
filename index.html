@@ -3,72 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Board - Collage Animado</title>
+    <title>Vision Board - Masonry Dinámico</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: transparent;
             font-family: 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            /* Quitamos el height 100vh fijo para que el masonry respire */
+            min-height: 100vh; 
             box-sizing: border-box;
-            padding: 20px;
         }
 
-        /* --- COLLAGE DE IMÁGENES --- */
-        .collage-container {
-            display: grid;
-            /* Cuadrícula de 4 columnas */
-            grid-template-columns: repeat(4, 1fr);
-            /* Altura base de cada fila */
-            grid-auto-rows: 130px; 
-            gap: 12px;
+        /* --- CONTENEDOR ESTILO PINTEREST (MASONRY) --- */
+        .masonry-container {
+            /* Creamos 3 columnas por defecto */
+            column-count: 3;
+            column-gap: 15px;
             width: 100%;
-            max-width: 800px;
+            max-width: 1000px;
         }
 
-        /* Dando diferentes tamaños a las piezas del collage para un look asimétrico */
-        .slot-1 { grid-column: span 2; grid-row: span 2; } /* Cuadrado grande */
-        .slot-2 { grid-column: span 1; grid-row: span 1; } /* Cuadrado pequeño */
-        .slot-3 { grid-column: span 1; grid-row: span 2; } /* Rectángulo vertical */
-        .slot-4 { grid-column: span 1; grid-row: span 1; } /* Cuadrado pequeño */
-        .slot-5 { grid-column: span 2; grid-row: span 1; } /* Rectángulo horizontal */
-        .slot-6 { grid-column: span 2; grid-row: span 1; } /* Rectángulo horizontal */
-
-        .collage-item {
+        /* Cada imagen dentro del masonry */
+        .masonry-item {
+            /* Evita que una imagen se parta entre dos columnas */
+            break-inside: avoid;
+            margin-bottom: 15px;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            transition: opacity 1.5s ease-in-out; /* Transición lenta y elegante */
+            transition: opacity 1s ease-in-out; 
             opacity: 1;
+            display: block; /* Elimina espacios fantasma debajo de la imagen */
         }
 
-        .collage-item.fade-out {
+        .masonry-item.fade-out {
             opacity: 0;
         }
 
-        /* Ajuste para pantallas pequeñas */
-        @media (max-width: 600px) {
-            .collage-container {
-                grid-template-columns: repeat(2, 1fr);
-                grid-auto-rows: 100px;
-            }
-            .slot-1 { grid-column: span 2; grid-row: span 2; }
-            .slot-2, .slot-3, .slot-4, .slot-5, .slot-6 { grid-column: span 1; grid-row: span 1; }
+        /* Responsive: Ajustamos las columnas en pantallas más pequeñas */
+        @media (max-width: 800px) {
+            .masonry-container { column-count: 2; }
+        }
+        @media (max-width: 500px) {
+            .masonry-container { column-count: 1; }
         }
 
         /* --- SECCIÓN DE FRASES --- */
         .quote-container {
             margin-top: 30px;
+            margin-bottom: 20px;
             text-align: center;
             max-width: 90%;
             min-height: 60px;
@@ -94,15 +83,16 @@
 </head>
 <body>
 
-    <!-- COLLAGE -->
-    <div class="collage-container">
-        <!-- 6 espacios visuales donde las imágenes irán rotando -->
-        <img class="collage-item slot-1" id="img-slot-1" src="" alt="Vision">
-        <img class="collage-item slot-2" id="img-slot-2" src="" alt="Vision">
-        <img class="collage-item slot-3" id="img-slot-3" src="" alt="Vision">
-        <img class="collage-item slot-4" id="img-slot-4" src="" alt="Vision">
-        <img class="collage-item slot-5" id="img-slot-5" src="" alt="Vision">
-        <img class="collage-item slot-6" id="img-slot-6" src="" alt="Vision">
+    <!-- MASONRY COLLAGE -->
+    <!-- Agregamos 7 imágenes iniciales para darle cuerpo a las columnas -->
+    <div class="masonry-container" id="masonry">
+        <img class="masonry-item" id="img-slot-1" src="" alt="Vision">
+        <img class="masonry-item" id="img-slot-2" src="" alt="Vision">
+        <img class="masonry-item" id="img-slot-3" src="" alt="Vision">
+        <img class="masonry-item" id="img-slot-4" src="" alt="Vision">
+        <img class="masonry-item" id="img-slot-5" src="" alt="Vision">
+        <img class="masonry-item" id="img-slot-6" src="" alt="Vision">
+        <img class="masonry-item" id="img-slot-7" src="" alt="Vision">
     </div>
 
     <!-- SECCIÓN DE FRASES -->
@@ -112,7 +102,6 @@
 
     <script>
         // --- LÓGICA DE LAS IMÁGENES ---
-        // Todas tus imágenes de Pinterest
         const allImages = [
             "https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg",
             "https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg",
@@ -137,10 +126,9 @@
             "https://i.pinimg.com/736x/51/95/3b/51953b07aca3f0808c1996f4eae3df98.jpg"
         ];
 
-        const totalSlots = 6;
+        const totalSlots = 7; // Usamos 7 espacios iniciales para llenar bien las columnas
         let displayedImages = [];
 
-        // Función para obtener una imagen aleatoria que no esté ya en pantalla
         function getNewRandomImage() {
             let newImg;
             do {
@@ -149,7 +137,7 @@
             return newImg;
         }
 
-        // Cargar las primeras 6 imágenes al inicio
+        // 1. Llenar el tablero al cargar la página
         for (let i = 1; i <= totalSlots; i++) {
             const slot = document.getElementById(`img-slot-${i}`);
             const randomImg = getNewRandomImage();
@@ -157,28 +145,26 @@
             displayedImages.push(randomImg);
         }
 
-        // Bucle para cambiar una imagen aleatoria cada 3.5 segundos
+        // 2. Intercambiar imágenes de forma fluida
         setInterval(() => {
-            // Elegir un slot al azar (del 1 al 6)
             const randomSlotIndex = Math.floor(Math.random() * totalSlots) + 1;
             const slotToChange = document.getElementById(`img-slot-${randomSlotIndex}`);
             
-            // Iniciar efecto de desvanecimiento
             slotToChange.classList.add('fade-out');
 
-            // Esperar a que la imagen desaparezca (1.5s) antes de cambiar la fuente
             setTimeout(() => {
                 const newImg = getNewRandomImage();
-                
-                // Actualizar el registro de imágenes mostradas
                 displayedImages[randomSlotIndex - 1] = newImg;
                 
-                // Cambiar la imagen y quitar el desvanecimiento
                 slotToChange.src = newImg;
-                slotToChange.classList.remove('fade-out');
-            }, 1500); 
+                
+                // Le damos tiempo al navegador a cargar la nueva imagen antes de aparecerla
+                slotToChange.onload = () => {
+                    slotToChange.classList.remove('fade-out');
+                };
+            }, 1000); 
 
-        }, 3500); // Frecuencia de cambio de imágenes
+        }, 4000); // Cambia una imagen cada 4 segundos
 
 
         // --- LÓGICA DE LAS FRASES ---
@@ -204,7 +190,7 @@
                 quoteElement.classList.remove('fade-out');
             }, 1000); 
             
-        }, 7000); 
+        }, 8000); 
     </script>
 </body>
 </html>
