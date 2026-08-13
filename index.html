@@ -3,192 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vision Board - Masonry Dinámico</title>
+    <title>Vision Board - Cinta Vertical</title>
     <style>
+        /* Importamos una fuente limpia para el autor y el resto del documento */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: transparent;
-            font-family: 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            /* Quitamos el height 100vh fijo para que el masonry respire */
-            min-height: 100vh; 
+            height: 100vh;
+            overflow: hidden; /* Evita que aparezca la barra de scroll nativa */
             box-sizing: border-box;
         }
 
-        /* --- CONTENEDOR ESTILO PINTEREST (MASONRY) --- */
-        .masonry-container {
-            /* Creamos 3 columnas por defecto */
-            column-count: 3;
-            column-gap: 15px;
+        /* --- BANNER FIJO (ARRIBA) --- */
+        .quote-banner {
+            position: relative;
+            z-index: 10;
             width: 100%;
-            max-width: 1000px;
+            /* Fondo semi-transparente para dar un efecto cristal */
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(8px);
+            padding: 25px 20px;
+            box-sizing: border-box;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
         }
 
-        /* Cada imagen dentro del masonry */
-        .masonry-item {
-            /* Evita que una imagen se parta entre dos columnas */
-            break-inside: avoid;
-            margin-bottom: 15px;
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            transition: opacity 1s ease-in-out; 
+        /* Soporte para Modo Oscuro en Notion */
+        @media (prefers-color-scheme: dark) {
+            .quote-banner {
+                background: rgba(25, 25, 25, 0.90);
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+            .quote-text { color: #f5f5f5 !important; }
+            .quote-author { color: #aaa !important; }
+        }
+
+        .quote-content {
+            transition: opacity 1.2s ease-in-out;
             opacity: 1;
-            display: block; /* Elimina espacios fantasma debajo de la imagen */
         }
 
-        .masonry-item.fade-out {
+        .quote-content.fade-out {
             opacity: 0;
         }
 
-        /* Responsive: Ajustamos las columnas en pantallas más pequeñas */
-        @media (max-width: 800px) {
-            .masonry-container { column-count: 2; }
-        }
-        @media (max-width: 500px) {
-            .masonry-container { column-count: 1; }
+        .quote-text {
+            /* Tipografía clásica solicitada */
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #222;
+            margin: 0;
+            line-height: 1.3;
         }
 
-        /* --- SECCIÓN DE FRASES --- */
-        .quote-container {
-            margin-top: 30px;
-            margin-bottom: 20px;
-            text-align: center;
-            max-width: 90%;
-            min-height: 60px;
+        .quote-author {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        /* --- CINTA DE IMÁGENES VERTICAL --- */
+        .slider-container {
+            flex: 1;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
             display: flex;
-            align-items: center;
             justify-content: center;
         }
 
-        .quote {
-            font-size: 1.2rem;
-            font-weight: 300;
-            color: #444; 
-            font-style: italic;
-            opacity: 1;
-            transition: opacity 1s ease-in-out;
-            letter-spacing: 0.5px;
+        .slider-track {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            /* Animación hacia arriba, durará 60 segundos por ciclo */
+            animation: scroll-vertical 60s linear infinite;
         }
 
-        .quote.fade-out {
-            opacity: 0;
+        .slider-track img {
+            width: 100%;
+            height: auto; /* Mantiene la proporción original, nada se corta */
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        @keyframes scroll-vertical {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); } 
+            /* Se desplaza el 50% porque duplicamos el contenido abajo */
         }
     </style>
 </head>
 <body>
 
-    <!-- MASONRY COLLAGE -->
-    <!-- Agregamos 7 imágenes iniciales para darle cuerpo a las columnas -->
-    <div class="masonry-container" id="masonry">
-        <img class="masonry-item" id="img-slot-1" src="" alt="Vision">
-        <img class="masonry-item" id="img-slot-2" src="" alt="Vision">
-        <img class="masonry-item" id="img-slot-3" src="" alt="Vision">
-        <img class="masonry-item" id="img-slot-4" src="" alt="Vision">
-        <img class="masonry-item" id="img-slot-5" src="" alt="Vision">
-        <img class="masonry-item" id="img-slot-6" src="" alt="Vision">
-        <img class="masonry-item" id="img-slot-7" src="" alt="Vision">
+    <!-- BANNER FIJO CON LAS FRASES -->
+    <div class="quote-banner">
+        <div class="quote-content" id="quote-box">
+            <p class="quote-text" id="quote-text">"El futuro pertenece a quienes creen en la belleza de sus sueños."</p>
+            <p class="quote-author" id="quote-author">— Eleanor Roosevelt</p>
+        </div>
     </div>
 
-    <!-- SECCIÓN DE FRASES -->
-    <div class="quote-container">
-        <div class="quote" id="quote-text">"Sé mejor que hace un segundo"</div>
+    <!-- CINTA QUE SE DESPLAZA -->
+    <div class="slider-container">
+        <div class="slider-track" id="track">
+            
+            <!-- GRUPO 1 DE IMÁGENES -->
+            <img src="https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg" alt="Vision">
+
+            <!-- GRUPO 2 (COPIA EXACTA DEL GRUPO 1 PARA QUE EL BUCLE SEA INFINITO) -->
+            <img src="https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg" alt="Vision">
+            <img src="https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg" alt="Vision">
+            
+        </div>
     </div>
 
     <script>
-        // --- LÓGICA DE LAS IMÁGENES ---
-        const allImages = [
-            "https://i.pinimg.com/736x/dd/8b/f6/dd8bf641987d26b53e60e86d4e49b8b5.jpg",
-            "https://i.pinimg.com/1200x/30/82/83/3082832b2c8edec35084f4e468110ae2.jpg",
-            "https://i.pinimg.com/736x/6d/77/c8/6d77c8d1e7100690cf1d67922d4cd379.jpg",
-            "https://i.pinimg.com/1200x/d0/6b/3d/d06b3daed24214260a1ad36084daf9cd.jpg",
-            "https://i.pinimg.com/736x/bd/44/de/bd44de16056b2765f3c00cd429ce8081.jpg",
-            "https://i.pinimg.com/736x/b3/f6/91/b3f691e724fcedb56a816193eb9fd7f4.jpg",
-            "https://i.pinimg.com/736x/c0/50/07/c050072e44d84eb96de4a6c6e8f9ba6c.jpg",
-            "https://i.pinimg.com/1200x/66/d6/94/66d694bf89009897cfea59cab3807e3d.jpg",
-            "https://i.pinimg.com/736x/02/e0/86/02e08602c0873eac50926de147176f72.jpg",
-            "https://i.pinimg.com/736x/ec/85/34/ec85348715cdec6be19fa49542319c7e.jpg",
-            "https://i.pinimg.com/1200x/4c/c5/19/4cc51953538fa53c737acf61466969ed.jpg",
-            "https://i.pinimg.com/736x/c6/aa/b0/c6aab0710727d17b4298a6dab25ac555.jpg",
-            "https://i.pinimg.com/1200x/34/42/05/344205701a26191b6eee948a71178065.jpg",
-            "https://i.pinimg.com/1200x/72/f1/8e/72f18edc3fe7d527aa3947a040adf195.jpg",
-            "https://i.pinimg.com/736x/3e/94/36/3e9436a01e789b1ffa052329044c1c8c.jpg",
-            "https://i.pinimg.com/1200x/dd/98/c9/dd98c924021bd0aa88e3f51524c43c03.jpg",
-            "https://i.pinimg.com/1200x/2d/4e/f7/2d4ef74abb20557da52ffeb7f16b1bbe.jpg",
-            "https://i.pinimg.com/736x/06/37/35/0637356f1bf2a290141c8260c44ff3d9.jpg",
-            "https://i.pinimg.com/1200x/14/6f/b0/146fb0d567b0a2f68bafbedd38d582fd.jpg",
-            "https://i.pinimg.com/736x/25/c7/b0/25c7b04d070b8cebf7fe798e8c286e5b.jpg",
-            "https://i.pinimg.com/736x/51/95/3b/51953b07aca3f0808c1996f4eae3df98.jpg"
-        ];
-
-        const totalSlots = 7; // Usamos 7 espacios iniciales para llenar bien las columnas
-        let displayedImages = [];
-
-        function getNewRandomImage() {
-            let newImg;
-            do {
-                newImg = allImages[Math.floor(Math.random() * allImages.length)];
-            } while (displayedImages.includes(newImg));
-            return newImg;
-        }
-
-        // 1. Llenar el tablero al cargar la página
-        for (let i = 1; i <= totalSlots; i++) {
-            const slot = document.getElementById(`img-slot-${i}`);
-            const randomImg = getNewRandomImage();
-            slot.src = randomImg;
-            displayedImages.push(randomImg);
-        }
-
-        // 2. Intercambiar imágenes de forma fluida
-        setInterval(() => {
-            const randomSlotIndex = Math.floor(Math.random() * totalSlots) + 1;
-            const slotToChange = document.getElementById(`img-slot-${randomSlotIndex}`);
-            
-            slotToChange.classList.add('fade-out');
-
-            setTimeout(() => {
-                const newImg = getNewRandomImage();
-                displayedImages[randomSlotIndex - 1] = newImg;
-                
-                slotToChange.src = newImg;
-                
-                // Le damos tiempo al navegador a cargar la nueva imagen antes de aparecerla
-                slotToChange.onload = () => {
-                    slotToChange.classList.remove('fade-out');
-                };
-            }, 1000); 
-
-        }, 4000); // Cambia una imagen cada 4 segundos
-
-
-        // --- LÓGICA DE LAS FRASES ---
+        // Lógica de Frases con Autores
         const quotes = [
-            '"Sé mejor que hace un segundo"',
-            '"El miedo es el precio que pagas por todo aquello que vale la pena vivir"',
-            '"El futuro pertenece a quienes creen en la belleza de sus sueños."',
-            '"La disciplina es el puente entre las metas y los logros."',
-            '"No te detengas hasta que te sientas orgulloso."',
-            '"Confía en el proceso, mantente enfocado."',
-            '"Tu única competencia es la persona que eras ayer."'
+            { text: '"El futuro pertenece a quienes creen en la belleza de sus sueños."', author: 'Eleanor Roosevelt' },
+            { text: '"Sé mejor que hace un segundo."', author: 'Anónimo' },
+            { text: '"El miedo es el precio que pagas por todo aquello que vale la pena vivir."', author: 'Anónimo' },
+            { text: '"La disciplina es el puente entre las metas y los logros."', author: 'Jim Rohn' },
+            { text: '"No te detengas hasta que te sientas orgulloso."', author: 'Anónimo' },
+            { text: '"Tu única competencia es la persona que eras ayer."', author: 'Anónimo' },
+            { text: '"Confía en el proceso, mantente enfocado."', author: 'Anónimo' }
         ];
 
         let currentQuote = 0;
-        const quoteElement = document.getElementById('quote-text');
+        const quoteBox = document.getElementById('quote-box');
+        const quoteText = document.getElementById('quote-text');
+        const quoteAuthor = document.getElementById('quote-author');
 
+        // Cambia la frase cada 8 segundos
         setInterval(() => {
-            quoteElement.classList.add('fade-out');
+            quoteBox.classList.add('fade-out');
             
             setTimeout(() => {
                 currentQuote = (currentQuote + 1) % quotes.length;
-                quoteElement.innerText = quotes[currentQuote];
-                quoteElement.classList.remove('fade-out');
-            }, 1000); 
+                quoteText.innerText = quotes[currentQuote].text;
+                quoteAuthor.innerText = '— ' + quotes[currentQuote].author;
+                
+                quoteBox.classList.remove('fade-out');
+            }, 1200); 
             
         }, 8000); 
     </script>
